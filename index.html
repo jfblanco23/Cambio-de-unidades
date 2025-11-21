@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>🔁 Cambio de Unidades — Jesús Blanco</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    :root { --primary:#2c3e50; --secondary:#3498db; --accent:#e74c3c; --light:#ecf0f1; --card-bg:white; --shadow:0 6px 20px rgba(0,0,0,0.08); --transition:all 0.3s ease; }
+    body { font-family:'Segoe UI',sans-serif; background:linear-gradient(135deg,#f5f7fa 0%,#e4edf5 100%); color:#34495e; line-height:1.6; padding:20px; min-height:100vh; }
+    .container { max-width:1200px; margin:0 auto; }
+    header { text-align:center; padding:40px 20px; margin-bottom:30px; }
+    h1 { font-size:2.8rem; color:var(--primary); margin-bottom:15px; font-weight:800; }
+    .subtitle { font-size:1.4rem; color:#7f8c8d; max-width:800px; margin:0 auto; }
+    .tabs { display:flex; flex-wrap:wrap; justify-content:center; gap:12px; margin-bottom:40px; }
+    .tab { background:var(--card-bg); border:none; padding:16px 28px; font-size:1.15rem; font-weight:600; border-radius:16px; cursor:pointer; transition:var(--transition); box-shadow:var(--shadow); display:flex; align-items:center; gap:10px; color:var(--primary); min-width:180px; text-align:center; }
+    .tab i { font-size:1.4rem; }
+    .tab:hover { transform:translateY(-4px); box-shadow:0 10px 25px rgba(52,152,219,0.25); background:#f8fbff; }
+    .tab.active { background:var(--secondary); color:white; transform:translateY(-2px); box-shadow:0 8px 20px rgba(52,152,219,0.4); }
+    .preview { background:var(--card-bg); border-radius:20px; padding:30px; text-align:center; margin-top:20px; box-shadow:var(--shadow); transition:var(--transition); }
+    .preview h2 { font-size:1.8rem; margin-bottom:20px; color:var(--primary); }
+    .preview p { font-size:1.2rem; color:#555; margin-bottom:25px; max-width:800px; margin:0 auto 25px; }
+    .btn { display:inline-block; background:var(--secondary); color:white; padding:16px 40px; font-size:1.25rem; font-weight:bold; border:none; border-radius:14px; cursor:pointer; text-decoration:none; transition:var(--transition); box-shadow:0 6px 15px rgba(52,152,219,0.3); }
+    .btn:hover { background:#2980b9; transform:translateY(-3px); box-shadow:0 8px 20px rgba(52,152,219,0.4); }
+    .btn i { margin-left:8px; }
+    footer { text-align:center; margin-top:60px; padding:20px; color:#7f8c8d; font-size:1.05rem; }
+    @media (max-width:768px) { h1{font-size:2.2rem} .subtitle{font-size:1.2rem} .tab{padding:14px 16px;font-size:1rem;min-width:140px} .btn{padding:14px 30px;font-size:1.1rem} }
+    @media (max-width:480px) { .tabs{gap:8px} .tab{padding:12px 10px;font-size:0.95rem;min-width:120px} }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>🔁 Ejercicios Interactivos: Cambio de Unidades</h1>
+      <p class="subtitle">Desarrollado por JesúsBB — Alineado con la LOMLOE: STEM</p>
+    </header>
+
+    <div class="tabs">
+      <button class="tab active" data-url="https://jfblanco23.github.io/Cambio-de-unidades/longitud/index.html">
+        <i class="fas fa-ruler"></i> Longitud
+      </button>
+      <button class="tab" data-url="https://jfblanco23.github.io/Cambio-de-unidades/masa/index.html">
+        <i class="fas fa-weight-hanging"></i> Masa
+      </button>
+      <button class="tab" data-url="https://jfblanco23.github.io/Cambio-de-unidades/superficie/index.html">
+        <i class="fas fa-border-all"></i> Superficie
+      </button>
+      <button class="tab" data-url="https://jfblanco23.github.io/Cambio-de-unidades/volumen/index.html">
+        <i class="fas fa-cube"></i> Volumen
+      </button>
+      <button class="tab" data-url="https://jfblanco23.github.io/Cambio-de-unidades/densidad1/index.html">
+        <i class="fas fa-tint"></i> Densidad I
+      </button>
+      <button class="tab" data-url="https://jfblanco23.github.io/Cambio-de-unidades/densidad2/index.html">
+        <i class="fas fa-flask"></i> Densidad II
+      </button>
+      <button class="tab" data-url="https://jfblanco23.github.io/Cambio-de-unidades/velocidad/index.html">
+        <i class="fas fa-tachometer-alt"></i> Velocidad
+      </button>
+    </div>
+
+    <div class="preview">
+      <h2><i class="fas fa-arrow-right"></i> Selecciona un tema para comenzar</h2>
+      <p>Haz clic en cualquier pestaña para acceder a ejercicios interactivos: arrastra, suelta, resuelve y aprende con retroalimentación inmediata.</p>
+      <button id="launch-btn" class="btn">
+        Ir a los ejercicios <i class="fas fa-rocket"></i>
+      </button>
+    </div>
+
+    <footer>
+      <p>© 2025 Jesús B.B. — Educación Matemática Secundaria | CyL</p>
+    </footer>
+  </div>
+
+  <script>
+    let currentUrl = 'https://jfblanco23.github.io/Cambio-de-unidades/longitud/index.html';
+
+    document.querySelectorAll('.tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        currentUrl = tab.dataset.url;
+      });
+    });
+
+    document.getElementById('launch-btn').addEventListener('click', () => {
+      const win = window.open(currentUrl, '_blank');
+      if (!win) {
+        alert('⚠️ Parece que tu navegador bloqueó la ventana emergente.\n\nHaz clic derecho en el botón y elige "Abrir en nueva pestaña".');
+      }
+    });
+
+    // Permitir Enter/Space en botones
+    document.querySelectorAll('.tab, #launch-btn').forEach(el => {
+      el.addEventListener('keydown', e => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          el.click();
+        }
+      });
+    });
+  </script>
+</body>
+</html>
