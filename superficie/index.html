@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <title>superficie</title>
+    <link rel="stylesheet" href="./style.css">
+
+  </head>
+    
+  <body>
+  <!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Ejercicios Interactivos: Conversión de Superficie</title>
+  <link rel="stylesheet" href="style.css" />
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true,
+        packages: {'[+]': ['ams']}
+      },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>📐 Ejercicios Interactivos: Conversión de Superficie</h1>
+      <p class="subtitle">Selecciona una pestaña para comenzar</p>
+    </header>
+
+    <div class="tabs">
+      <button class="tab-btn active" onclick="openTab('ex1')">Ejercicio 1</button>
+      <button class="tab-btn" onclick="openTab('ex2')">Ejercicio 2</button>
+      <button class="tab-btn" onclick="openTab('ex3')">Ejercicio 3</button>
+      <button class="tab-btn" onclick="openTab('ex4')">Ejercicio 4</button>
+    </div>
+
+    <!-- Ejercicio 1 -->
+    <div id="ex1" class="tab-content active">
+      <div class="exercise-card">
+        <div class="problem">
+          <span class="value">\(2{,}25\,\mathrm{m}^2\)</span> <span class="arrow">\(\rightarrow\)</span> <span class="value">\(? \,\mathrm{dm}^2\)</span>
+        </div>
+        <div class="conversion-display">
+          <span class="value">\(2{,}25\,\mathrm{m}^2\)</span>
+          <span>\(\times\)</span>
+          <div class="parenthesis-fraction">
+            <span class="parenthesis large">(</span>
+            <div class="fraction-container">
+              <div class="fraction-row">
+                <div id="ex1-num1-power" class="fraction-slot" ondrop="drop(event,'ex1')" ondragover="dragOverSlot(event)" ondragleave="dragLeaveSlot(event)"><span class="placeholder">Potencia</span></div>
+                <div id="ex1-num1-unit" class="fraction-slot" ondrop="drop(event,'ex1')" ondragover="dragOverSlot(event)" ondragleave="dragLeaveSlot(event)"><span class="placeholder">Unidad</span></div>
+              </div>
+              <div class="fraction-line"></div>
+              <div class="fraction-row">
+                <div id="ex1-den1-power" class="fraction-slot" ondrop="drop(event,'ex1')" ondragover="dragOverSlot(event)" ondragleave="dragLeaveSlot(event)"><span class="placeholder">Potencia</span></div>
+                <div id="ex1-den1-unit" class="fraction-slot" ondrop="drop(event,'ex1')" ondragover="dragOverSlot(event)" ondragleave="dragLeaveSlot(event)"><span class="placeholder">Unidad</span></div>
+              </div>
+            </div>
+            <span class="parenthesis large">)</span>
+            <sup class="squared">2</sup>
+          </div>
+        </div>
+        <div class="feedback" id="ex1-feedback"></div>
+        <div class="result-container" id="ex1-result"></div>
+        <div class="units-section">
+          <h2 class="section-title">Unidades</h2>
+          <div class="cards-container">
+            <span class="draggable draggable-unit unit-m" draggable="true" ondragstart="dragStart(event)" data-value="m" data-type="unit" data-latex="\\mathrm{m}">m</span>
+            <span class="draggable draggable-unit unit-dm" draggable="true" ondragstart="dragStart(event)" data-value="dm" data-type="unit" data-latex="\\mathrm{dm}">dm</span>
+          </div>
+        </div>
+        <div class="powers-section">
+          <h2 class="section-title">Potencias de 10</h2>
+          <div class="cards-container">
+            <span class="draggable draggable-power" draggable="true" ondragstart="dragStart(event)" data-value="1" data-type="power" data-latex="1">1</span>
+            <span class="draggable draggable-power" draggable="true" ondragstart="dragStart(event)" data-value="10^1" data-power="1" data-type="power" data-latex="10^{1}">10</span>
+            <span class="draggable draggable-power" draggable="true" ondragstart="dragStart(event)" data-value="10^2" data-power="2" data-type="power" data-latex="10^{2}">10²</span>
+          </div>
+        </div>
+        <div class="controls">
+          <button onclick="checkAnswer('ex1')">Verificar</button>
+          <button class="reset-btn" onclick="resetExercise('ex1')">Reiniciar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ejercicio 2 -->
+    <div id="ex2" class="tab-content">
+      <div class="exercise-card">
+        <div class="problem">
+          <span class="value">\(1850{,}2\,\mathrm{cm}^2\)</span> <span class="arrow">\(\rightarrow\)</span> <span class="value">\(? \,\mathrm{m}^2\)</span>
+        </div>
+        <div class="conversion-display">
+          <span class="value">\(1850{,}2\,\mathrm{cm}^2\)</span>
+          <span>\(\times\)</span>
+          <div class="parenthesis-fraction">
+            <span class="parenthesis large">(</span>
+            <div class="fraction-container">
+              <div class="fraction-row">
+                <div id="ex2-num1-power" class="fraction-slot" ondrop="drop(event,'ex2')" ondragover="dragOverSlot(event)" ondragleave="dragLeaveSlot(event)"><span class="placeholder">Potencia</span></div>
+                <div id="ex2-num1-unit" class="fraction-slot" ondrop="drop(event,'ex2')" ondragover="dragOverSlot(event)" ondragleave="dragLeaveSlot(event)"><span class="placeholder">Unidad</span></div>
+              </div>
+              <div class="fraction-line"></div>
+              <div class="fraction-row">
+                <div id="ex2-den1-power" class="fraction-slot" ondrop="drop(event,'ex2')" ondragover="dragOverSlot(event)" ondragleave="dragLeaveSlot(event)"><span class="placeholder">Potencia</span></div>
+                <div id="ex2-den1-unit" class="fraction-slot" ondrop="drop(event,'ex2')" ondragover="dragOverSlot(event)" ondragleave="dragLeaveSlot(event)"><span class="placeholder">Unidad</span></div>
+              </div>
+            </div>
+            <span class="parenthesis large">)</span>
+            <sup class="squared">2</sup>
+          </div>
+        </div>
+        <div class="feedback" id="ex2-feedback"></div>
+        <div class="result-container" id="ex2-result"></div>
+        <div class="units-section">
+          <h2 class="section-title">Unidades</h2>
+          <div class="cards-container">
+            <span class="draggable draggable-unit unit-cm" draggable="true" ondragstart="dragStart(event)" data-value="cm" data-type="unit" data-latex="\\mathrm{cm}">cm</span>
+            <span class="draggable draggable-unit unit-m" draggable="true" ondragstart="dragStart(event)" data-value="m" data-type="unit" data-latex="\\mathrm{m}">m</span>
+          </div>
+        </div>
+        <div class="powers-section">
+          <h2 class="section-title">Potencias de 10</h2>
+          <div class="cards-container">
+            <span class="draggable draggable-power" draggable="true" ondragstart="dragStart(event)" data-value="1" data-type="power" data-latex="1">1</span>
+            <span class="draggable draggable-power" draggable="true" ondragstart="dragStart(event)" data-value="10^1" data-power="1" data-type="power" data-latex="10^{1}">10</span>
+            <span class="draggable draggable-power" draggable="true" ondragstart="dragStart(event)" data-value="10^2" data-power="2" data-type="power" data-latex="10^{2}">10²</span>
+            <span class="draggable draggable-power" draggable="true" ondragstart="dragStart(event)" data-value="10^4" data-power="4" data-type="power" data-latex="10^{4}">10⁴</span>
+          </div>
+        </div>
+        <div class="controls">
+          <button onclick="checkAnswer('ex2')">Verificar</button>
+          <button class="reset-btn" onclick="resetExercise('ex2')">Reiniciar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ejercicio 3 - CORREGIDO -->
+    <div id="ex3" class="tab-content">
+      <div class="exercise-card">
+        <div class="problem">
+          <span class="value">\(500000\,\mathrm{cm}^2\)</span> <span class="arrow">\(\rightarrow\)</span> <span class="value">\(? \,\mathrm{dam}^2\)</span>
+        </div>
+        <div class="conversion-display">
+          <span class="value">\(500000\,\mathrm{cm}^2\)</span>
+          <span>\(\times\)</span>
+          <div class="parenthesis-fraction">
+            <span class="parenthesis large">(</span>
+            <div class="fraction-container">
+              <div class="fraction-row">
+                <div id="ex3-num1-power" class="fraction-slot" ondrop="drop(event,'ex3')" ondragover="dragOverSlot(event)" ondragleave="dragLeaveSlot(event)"><span class="placeholder">Potencia</span></div>
+                <div id="ex3-num1-unit" class="fraction-slot" ondrop="drop(event,'ex3')" ondragover="dragOverSlot(event)" ondragleave="dragLeaveSlot(event)"><span class="placeholder">Unidad</span></div>
+              </div>
+              <div class="fraction-line"></div>
+              <div class="fraction-row">
+                <div id="ex3-den1-power" class="fraction-slot" ondrop="drop(event,'ex3')" ondragover="dragOverSlot(event)" ondragleave="dragLeaveSlot(event)"><span class="placeholder">Potencia</span></div>
+                <div id="ex3-den1-unit" class="fraction-slot" ondrop="drop(event,'ex3')" ondragover="dragOverSlot(event)" ondragleave="dragLeaveSlot(event)"><span class="placeholder">Unidad</span></div>
+              </div>
+            </div>
+            <span class="parenthesis large">)</span>
+            <sup class="squared">2</sup>
+          </div>
+          <span>\(\times\)</span>
+          <div class="parenthesis-fraction">
+            <span class="parenthesis large">(</span>
+            <div class="fraction-container">
+              <div class="fraction-row">
+                <div id="ex3-num2-power" class="fraction-slot" ondrop="drop(event,'ex3')" ondragover="dragOverSlot(event)" ondragleave="dragLeaveSlot(event)"><span class="placeholder">Potencia</span></div>
+                <div id="ex3-num2-unit" class="fraction-slot" ondrop="drop(event,'ex3')" ondragover="dragOverSlot(event)" ondragleave="dragLeaveSlot(event)"><span class="placeholder">Unidad</span></div>
+              </div>
+              <div class="fraction-line"></div>
+              <div class="fraction-row">
+                <div id="ex3-den2-power" class="fraction-slot" ondrop="drop(event,'ex3')" ondragover="dragOverSlot(event)" ondragleave="dragLeaveSlot(event)"><span class="placeholder">Potencia</span></div>
+                <div id="ex3-den2-unit" class="fraction-slot" ondrop="drop(event,'ex3')" ondragover="dragOverSlot(event)" ondragleave="dragLeaveSlot(event)"><span class="placeholder">Unidad</span></div>
+              </div>
+            </div>
+            <span class="parenthesis large">)</span>
+            <sup class="squared">2</sup>
+          </div>
+        </div>
+        <div class="feedback" id="ex3-feedback"></div>
+        <div class="result-container" id="ex3-result"></div>
+        <div class="units-section">
+          <h2 class="section-title">Unidades</h2>
+          <div class="cards-container">
+            <span class="draggable draggable-unit unit-cm" draggable="true" ondragstart="dragStart(event)" data-value="cm" data-type="unit" data-latex="\\mathrm{cm}">cm</span>
+            <span class="draggable draggable-unit unit-m" draggable="true" ondragstart="dragStart(event)" data-value="m" data-type="unit" data-latex="\\mathrm{m}">m</span>
+            <span class="draggable draggable-unit unit-dam" draggable="true" ondragstart="dragStart(event)" data-value="dam" data-type="unit" data-latex="\\mathrm{dam}">dam</span>
+          </div>
+        </div>
+        <div class="powers-section">
+          <h2 class="section-title">Potencias de 10</h2>
+          <div class="cards-container">
+            <span class="draggable draggable-power" draggable="true" ondragstart="dragStart(event)" data-value="1" data-type="power" data-latex="1">1</span>
+            <span class="draggable draggable-power" draggable="true" ondragstart="dragStart(event)" data-value="10^1" data-power="1" data-type="power" data-latex="10^{1}">10</span>
+            <span class="draggable draggable-power" draggable="true" ondragstart="dragStart(event)" data-value="10^2" data-power="2" data-type="power" data-latex="10^{2}">10²</span>
+            <span class="draggable draggable-power" draggable="true" ondragstart="dragStart(event)" data-value="10^3" data-power="3" data-type="power" data-latex="10^{3}">10³</span>
+            <span class="draggable draggable-power" draggable="true" ondragstart="dragStart(event)" data-value="10^4" data-power="4" data-type="power" data-latex="10^{4}">10⁴</span>
+            <span class="draggable draggable-power" draggable="true" ondragstart="dragStart(event)" data-value="10^6" data-power="6" data-type="power" data-latex="10^{6}">10⁶</span>
+          </div>
+        </div>
+        <div class="controls">
+          <button onclick="checkAnswer('ex3')">Verificar</button>
+          <button class="reset-btn" onclick="resetExercise('ex3')">Reiniciar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ejercicio 4 -->
+    <div id="ex4" class="tab-content">
+      <div class="exercise-card">
+        <div class="problem">
+          <span class="value">\(1200\,\mathrm{dm}^2\)</span> <span class="arrow">\(\rightarrow\)</span> <span class="value">\(? \,\mathrm{km}^2\)</span>
+        </div>
+        <div class="conversion-display">
+          <span class="value">\(1200\,\mathrm{dm}^2\)</span>
+          <span>\(\times\)</span>
+          <div class="parenthesis-fraction">
+            <span class="parenthesis large">(</span>
+            <div class="fraction-container">
+              <div class="fraction-row">
+                <div id="ex4-num1-power" class="fraction-slot" ondrop="drop(event,'ex4')" ondragover="dragOverSlot(event)" ondragleave="dragLeaveSlot(event)"><span class="placeholder">Potencia</span></div>
+                <div id="ex4-num1-unit" class="fraction-slot" ondrop="drop(event,'ex4')" ondragover="dragOverSlot(event)" ondragleave="dragLeaveSlot(event)"><span class="placeholder">Unidad</span></div>
+              </div>
+              <div class="fraction-line"></div>
+              <div class="fraction-row">
+                <div id="ex4-den1-power" class="fraction-slot" ondrop="drop(event,'ex4')" ondragover="dragOverSlot(event)" ondragleave="dragLeaveSlot(event)"><span class="placeholder">Potencia</span></div>
+                <div id="ex4-den1-unit" class="fraction-slot" ondrop="drop(event,'ex4')" ondragover="dragOverSlot(event)" ondragleave="dragLeaveSlot(event)"><span class="placeholder">Unidad</span></div>
+              </div>
+            </div>
+            <span class="parenthesis large">)</span>
+            <sup class="squared">2</sup>
+          </div>
+          <span>\(\times\)</span>
+          <div class="parenthesis-fraction">
+            <span class="parenthesis large">(</span>
+            <div class="fraction-container">
+              <div class="fraction-row">
+                <div id="ex4-num2-power" class="fraction-slot" ondrop="drop(event,'ex4')" ondragover="dragOverSlot(event)" ondragleave="dragLeaveSlot(event)"><span class="placeholder">Potencia</span></div>
+                <div id="ex4-num2-unit" class="fraction-slot" ondrop="drop(event,'ex4')" ondragover="dragOverSlot(event)" ondragleave="dragLeaveSlot(event)"><span class="placeholder">Unidad</span></div>
+              </div>
+              <div class="fraction-line"></div>
+              <div class="fraction-row">
+                <div id="ex4-den2-power" class="fraction-slot" ondrop="drop(event,'ex4')" ondragover="dragOverSlot(event)" ondragleave="dragLeaveSlot(event)"><span class="placeholder">Potencia</span></div>
+                <div id="ex4-den2-unit" class="fraction-slot" ondrop="drop(event,'ex4')" ondragover="dragOverSlot(event)" ondragleave="dragLeaveSlot(event)"><span class="placeholder">Unidad</span></div>
+              </div>
+            </div>
+            <span class="parenthesis large">)</span>
+            <sup class="squared">2</sup>
+          </div>
+        </div>
+        <div class="feedback" id="ex4-feedback"></div>
+        <div class="result-container" id="ex4-result"></div>
+        <div class="units-section">
+          <h2 class="section-title">Unidades</h2>
+          <div class="cards-container">
+            <span class="draggable draggable-unit unit-dm" draggable="true" ondragstart="dragStart(event)" data-value="dm" data-type="unit" data-latex="\\mathrm{dm}">dm</span>
+            <span class="draggable draggable-unit unit-m" draggable="true" ondragstart="dragStart(event)" data-value="m" data-type="unit" data-latex="\\mathrm{m}">m</span>
+            <span class="draggable draggable-unit unit-km" draggable="true" ondragstart="dragStart(event)" data-value="km" data-type="unit" data-latex="\\mathrm{km}">km</span>
+          </div>
+        </div>
+        <div class="powers-section">
+          <h2 class="section-title">Potencias de 10</h2>
+          <div class="cards-container">
+            <span class="draggable draggable-power" draggable="true" ondragstart="dragStart(event)" data-value="1" data-type="power" data-latex="1">1</span>
+            <span class="draggable draggable-power" draggable="true" ondragstart="dragStart(event)" data-value="10^1" data-power="1" data-type="power" data-latex="10^{1}">10</span>
+            <span class="draggable draggable-power" draggable="true" ondragstart="dragStart(event)" data-value="10^2" data-power="2" data-type="power" data-latex="10^{2}">10²</span>
+            <span class="draggable draggable-power" draggable="true" ondragstart="dragStart(event)" data-value="10^3" data-power="3" data-type="power" data-latex="10^{3}">10³</span>
+            <span class="draggable draggable-power" draggable="true" ondragstart="dragStart(event)" data-value="10^4" data-power="4" data-type="power" data-latex="10^{4}">10⁴</span>
+            <span class="draggable draggable-power" draggable="true" ondragstart="dragStart(event)" data-value="10^6" data-power="6" data-type="power" data-latex="10^{6}">10⁶</span>
+            <span class="draggable draggable-power" draggable="true" ondragstart="dragStart(event)" data-value="10^12" data-power="12" data-type="power" data-latex="10^{12}">10¹²</span>
+          </div>
+        </div>
+        <div class="controls">
+          <button onclick="checkAnswer('ex4')">Verificar</button>
+          <button class="reset-btn" onclick="resetExercise('ex4')">Reiniciar</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
+    <script  src="./script.js"></script>
+
+  </body>
+  
+</html>
