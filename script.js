@@ -5,24 +5,55 @@ function dragStart(event) {
   event.dataTransfer.setData('text/plain', event.target.textContent);
 }
 
-function allowDrop(event) {
+function dragOverSlot(event) {
   event.preventDefault();
+  const slot = event.target.closest('.fraction-slot');
+  if (!slot || !draggedElement) return;
+
+  const type = draggedElement.dataset.type;
+  slot.classList.remove('dragover-unit', 'dragover-power');
+  if (type === 'unit') {
+    slot.classList.add('dragover-unit');
+  } else if (type === 'power') {
+    slot.classList.add('dragover-power');
+  }
+}
+
+function dragLeaveSlot(event) {
+  const slot = event.target.closest('.fraction-slot');
+  if (slot) {
+    slot.classList.remove('dragover-unit', 'dragover-power');
+  }
 }
 
 function drop(event, exerciseId) {
   event.preventDefault();
-  if (!draggedElement) return;
-
   const slot = event.target.closest('.fraction-slot');
-  if (!slot) return;
+  if (!slot || !draggedElement) {
+    draggedElement = null;
+    return;
+  }
 
+  slot.classList.remove('dragover-unit', 'dragover-power');
   slot.innerHTML = '';
+
   const clone = draggedElement.cloneNode(true);
-  clone.style.cursor = 'default';
   clone.draggable = false;
   clone.classList.remove('draggable', 'draggable-unit', 'draggable-power');
   clone.classList.add('dropped');
   slot.appendChild(clone);
+
+  // Color the slot based on the unit color if dropped element is a unit
+  if (clone.dataset.type === 'unit') {
+    const unitClasses = [...clone.classList].filter(c => c.startsWith('unit-'));
+    if (unitClasses.length > 0) {
+      slot.className = 'fraction-slot ' + 'color-' + unitClasses[0].substring(5);
+    }
+  } else {
+    // For power, remove color class to keep neutral style
+    slot.className = 'fraction-slot';
+  }
+
   draggedElement = null;
 }
 
@@ -31,65 +62,58 @@ function getSlotContent(slotId) {
   const child = slot.querySelector('.dropped');
   return child ? {
     value: child.dataset.value,
-    type: child.dataset.type,
     latex: child.dataset.latex || '',
-    power: parseInt(child.dataset.power) || (child.dataset.value === '1' ? 0 : null)
+    power: child.dataset.power ? parseInt(child.dataset.power) : (child.dataset.value === '1' ? 0 : null)
   } : null;
 }
 
-// Función auxiliar para renderizar MathJax en un elemento
 function renderMath(element) {
-  if (typeof MathJax !== 'undefined') {
-    MathJax.typesetPromise([element]).catch(console.error);
+  if (typeof MathJax !== 'undefined' && MathJax.typesetPromise) {
+    MathJax.typesetPromise([element]).catch(console.warn);
   }
 }
 
 function checkAnswer(exerciseId) {
   let feedbackEl, resultDiv, slotElements, allFilled, isCorrect, mathTeX, errorMessage;
-  
+
   if (exerciseId === 'e1') {
     const slots = {
-      numPower: getSlotContent('e1-num-power'),
-      numUnit: getSlotContent('e1-num-unit'),
-      denPower: getSlotContent('e1-den-power'),
-      denUnit: getSlotContent('e1-den-unit')
+      n1p: getSlotContent('e1-num1-power'), n1u: getSlotContent('e1-num1-unit'),
+      d1p: getSlotContent('e1-den1-power'), d1u: getSlotContent('e1-den1-unit'),
+      n2p: getSlotContent('e1-num2-power'), n2u: getSlotContent('e1-num2-unit'),
+      d2p: getSlotContent('e1-den2-power'), d2u: getSlotContent('e1-den2-unit')
     };
-    
+
     feedbackEl = document.getElementById('e1-feedback');
     resultDiv = document.getElementById('e1-result');
     slotElements = [
-      document.getElementById('e1-num-power'),
-      document.getElementById('e1-num-unit'),
-      document.getElementById('e1-den-power'),
-      document.getElementById('e1-den-unit')
-    ];
-    
+      'e1-num1-power', 'e1-num1-unit', 'e1-den1-power', 'e1-den1-unit',
+      'e1-num2-power', 'e1-num2-unit', 'e1-den2-power', 'e1-den2-unit'
+    ].map(id => document.getElementById(id));
+
     allFilled = Object.values(slots).every(s => s !== null);
     if (!allFilled) {
-      feedbackEl.innerHTML = "⚠️ Completa los 4 espacios.";
+      feedbackEl.textContent = "⚠️ Completa los 8 espacios.";
       feedbackEl.className = "feedback incorrect";
-      renderMath(feedbackEl);
       resultDiv.classList.remove('show');
-      resetSlotStyles('e1');
       return;
     }
 
-    isCorrect = 
-      slots.numPower.value === "10³" && 
-      slots.numUnit.value === "g" &&
-      slots.denPower.value === "1" &&
-      slots.denUnit.value === "kg";
+    isCorrect =
+      slots.n1p.value === "1" && slots.n1u.value === "m" &&
+      slots.d1p.value === "10^12" && slots.d1u.value === "pm" &&
+      slots.n2p.value === "1" && slots.n2u.value === "km" &&
+      slots.d2p.value === "10^3" && slots.d2u.value === "m";
 
     if (isCorrect) {
-      feedbackEl.innerHTML = "✅ ¡Correcto!";
+      feedbackEl.innerHTML = "✅ ¡Perfecto! Conversión en dos pasos: pm → m → km.";
       feedbackEl.className = "feedback correct";
       mathTeX = `
         \\[
-        28\\,\\mathrm{kg}
-        = 28\\,\\mathrm{kg} \\times
-        \\frac{10^{3}\\,\\mathrm{g}}{1\\,\\mathrm{kg}}
-        = 28 \\times 10^{3}\\,\\mathrm{g}
-        = 2.8 \\times 10^{4}\\,\\mathrm{g}
+        750\\,\\mathrm{pm}
+        = 750\\,\\mathrm{pm} \\times \\frac{1\\,\\mathrm{m}}{10^{12}\\,\\mathrm{pm}}
+        \\times \\frac{1\\,\\mathrm{km}}{10^{3}\\,\\mathrm{m}}
+        = 7.5 \\times 10^{-13}\\,\\mathrm{km}
         \\]
       `;
       resultDiv.innerHTML = mathTeX;
@@ -97,26 +121,21 @@ function checkAnswer(exerciseId) {
       renderMath(resultDiv);
       slotElements.forEach(el => el.className = "fraction-slot valid");
     } else {
-      errorMessage = "❌ Usa \\(\\frac{10^{3}\\,\\mathrm{g}}{1\\,\\mathrm{kg}}\\).";
+      errorMessage = "❌ Usa: \\(\\frac{1\\,\\mathrm{m}}{10^{12}\\,\\mathrm{pm}}\\) y \\(\\frac{1\\,\\mathrm{km}}{10^{3}\\,\\mathrm{m}}\\).";
       feedbackEl.innerHTML = errorMessage;
       feedbackEl.className = "feedback incorrect";
       renderMath(feedbackEl);
       resultDiv.classList.remove('show');
       slotElements.forEach(el => el.className = "fraction-slot invalid");
     }
-
   } else if (exerciseId === 'e2') {
     const slots = {
-      num1Power: getSlotContent('e2-num1-power'),
-      num1Unit: getSlotContent('e2-num1-unit'),
-      den1Power: getSlotContent('e2-den1-power'),
-      den1Unit: getSlotContent('e2-den1-unit'),
-      num2Power: getSlotContent('e2-num2-power'),
-      num2Unit: getSlotContent('e2-num2-unit'),
-      den2Power: getSlotContent('e2-den2-power'),
-      den2Unit: getSlotContent('e2-den2-unit')
+      n1p: getSlotContent('e2-num1-power'), n1u: getSlotContent('e2-num1-unit'),
+      d1p: getSlotContent('e2-den1-power'), d1u: getSlotContent('e2-den1-unit'),
+      n2p: getSlotContent('e2-num2-power'), n2u: getSlotContent('e2-num2-unit'),
+      d2p: getSlotContent('e2-den2-power'), d2u: getSlotContent('e2-den2-unit')
     };
-    
+
     feedbackEl = document.getElementById('e2-feedback');
     resultDiv = document.getElementById('e2-result');
     slotElements = [
@@ -126,32 +145,28 @@ function checkAnswer(exerciseId) {
 
     allFilled = Object.values(slots).every(s => s !== null);
     if (!allFilled) {
-      feedbackEl.innerHTML = "⚠️ Completa los 8 espacios.";
+      feedbackEl.textContent = "⚠️ Completa los 8 espacios.";
       feedbackEl.className = "feedback incorrect";
-      renderMath(feedbackEl);
       resultDiv.classList.remove('show');
-      resetSlotStyles('e2');
       return;
     }
 
-    isCorrect = 
-      slots.num1Power.value === "1" && slots.num1Unit.value === "g" &&
-      slots.den1Power.value === "10³" && slots.den1Unit.value === "mg" &&
-      slots.num2Power.value === "1" && slots.num2Unit.value === "kg" &&
-      slots.den2Power.value === "10³" && slots.den2Unit.value === "g";
+    isCorrect =
+      slots.n1p.value === "1" && slots.n1u.value === "m" &&
+      slots.d1p.value === "10^3" && slots.d1u.value === "mm" &&
+      slots.n2p.value === "1" && slots.n2u.value === "hm" &&
+      slots.d2p.value === "10^2" && slots.d2u.value === "m";
 
     if (isCorrect) {
       feedbackEl.innerHTML = "✅ ¡Perfecto! Conversión en dos pasos.";
       feedbackEl.className = "feedback correct";
       mathTeX = `
         \\[
-        324500\\,\\mathrm{mg}
-        = 3.245 \\times 10^{5}\\,\\mathrm{mg}
-        \\times \\frac{1\\,\\mathrm{g}}{10^{3}\\,\\mathrm{mg}}
-        \\times \\frac{1\\,\\mathrm{kg}}{10^{3}\\,\\mathrm{g}}
-        = 3.245 \\times \\frac{10^{5}}{10^{6}}\\,\\mathrm{kg}
-        = 3.245 \\times 10^{-1}\\,\\mathrm{kg}
-        = 0.3245\\,\\mathrm{kg}
+        4200\\,\\mathrm{mm}
+        = 4.2 \\times 10^{3}\\,\\mathrm{mm}
+        \\times \\frac{1\\,\\mathrm{m}}{10^{3}\\,\\mathrm{mm}}
+        \\times \\frac{1\\,\\mathrm{hm}}{10^{2}\\,\\mathrm{m}}
+        = 0.042\\,\\mathrm{hm}
         \\]
       `;
       resultDiv.innerHTML = mathTeX;
@@ -159,61 +174,45 @@ function checkAnswer(exerciseId) {
       renderMath(resultDiv);
       slotElements.forEach(el => el.className = "fraction-slot valid");
     } else {
-      errorMessage = "❌ Usa: \\(\\frac{1\\,\\mathrm{g}}{10^{3}\\,\\mathrm{mg}}\\) y \\(\\frac{1\\,\\mathrm{kg}}{10^{3}\\,\\mathrm{g}}\\).";
+      errorMessage = "❌ Usa: \\(\\frac{1\\,\\mathrm{m}}{10^{3}\\,\\mathrm{mm}}\\) y \\(\\frac{1\\,\\mathrm{hm}}{10^{2}\\,\\mathrm{m}}\\).";
       feedbackEl.innerHTML = errorMessage;
       feedbackEl.className = "feedback incorrect";
       renderMath(feedbackEl);
       resultDiv.classList.remove('show');
       slotElements.forEach(el => el.className = "fraction-slot invalid");
     }
-
   } else if (exerciseId === 'e3') {
     const slots = {
-      num1Power: getSlotContent('e3-num1-power'),
-      num1Unit: getSlotContent('e3-num1-unit'),
-      den1Power: getSlotContent('e3-den1-power'),
-      den1Unit: getSlotContent('e3-den1-unit'),
-      num2Power: getSlotContent('e3-num2-power'),
-      num2Unit: getSlotContent('e3-num2-unit'),
-      den2Power: getSlotContent('e3-den2-power'),
-      den2Unit: getSlotContent('e3-den2-unit')
+      np: getSlotContent('e3-num-power'), nu: getSlotContent('e3-num-unit'),
+      dp: getSlotContent('e3-den-power'), du: getSlotContent('e3-den-unit')
     };
-    
+
     feedbackEl = document.getElementById('e3-feedback');
     resultDiv = document.getElementById('e3-result');
     slotElements = [
-      'e3-num1-power', 'e3-num1-unit', 'e3-den1-power', 'e3-den1-unit',
-      'e3-num2-power', 'e3-num2-unit', 'e3-den2-power', 'e3-den2-unit'
+      'e3-num-power', 'e3-num-unit', 'e3-den-power', 'e3-den-unit'
     ].map(id => document.getElementById(id));
 
     allFilled = Object.values(slots).every(s => s !== null);
     if (!allFilled) {
-      feedbackEl.innerHTML = "⚠️ Completa los 8 espacios.";
+      feedbackEl.textContent = "⚠️ Completa los 4 espacios.";
       feedbackEl.className = "feedback incorrect";
-      renderMath(feedbackEl);
       resultDiv.classList.remove('show');
-      resetSlotStyles('e3');
       return;
     }
 
-    isCorrect = 
-      slots.num1Power.value === "1" && slots.num1Unit.value === "g" &&
-      slots.den1Power.value === "10⁹" && slots.den1Unit.value === "ng" &&
-      slots.num2Power.value === "1" && slots.num2Unit.value === "hg" &&
-      slots.den2Power.value === "10²" && slots.den2Unit.value === "g";
+    isCorrect =
+      slots.np.value === "1" && slots.nu.value === "m" &&
+      slots.dp.value === "10^1" && slots.du.value === "dm";
 
     if (isCorrect) {
-      feedbackEl.innerHTML = "✅ ¡Excelente! Conversión correcta.";
+      feedbackEl.innerHTML = "✅ ¡Correcto! Conversión directa.";
       feedbackEl.className = "feedback correct";
       mathTeX = `
         \\[
-        12000000\\,\\mathrm{ng}
-        = 1.2 \\times 10^{7}\\,\\mathrm{ng}
-        \\times \\frac{1\\,\\mathrm{g}}{10^{9}\\,\\mathrm{ng}}
-        \\times \\frac{1\\,\\mathrm{hg}}{10^{2}\\,\\mathrm{g}}
-        = 1.2 \\times \\frac{10^{7}}{10^{11}}\\,\\mathrm{hg}
-        = 1.2 \\times 10^{-4}\\,\\mathrm{hg}
-        = 0.00012\\,\\mathrm{hg}
+        5.6\\,\\mathrm{dm}
+        = 5.6\\,\\mathrm{dm} \\times \\frac{1\\,\\mathrm{m}}{10^{1}\\,\\mathrm{dm}}
+        = 0.56\\,\\mathrm{m}
         \\]
       `;
       resultDiv.innerHTML = mathTeX;
@@ -221,27 +220,21 @@ function checkAnswer(exerciseId) {
       renderMath(resultDiv);
       slotElements.forEach(el => el.className = "fraction-slot valid");
     } else {
-      errorMessage = "❌ Usa: \\(\\frac{1\\,\\mathrm{g}}{10^{9}\\,\\mathrm{ng}}\\) y \\(\\frac{1\\,\\mathrm{hg}}{10^{2}\\,\\mathrm{g}}\\).";
+      errorMessage = "❌ Usa \\(\\frac{1\\,\\mathrm{m}}{10^{1}\\,\\mathrm{dm}}\\).";
       feedbackEl.innerHTML = errorMessage;
       feedbackEl.className = "feedback incorrect";
       renderMath(feedbackEl);
       resultDiv.classList.remove('show');
       slotElements.forEach(el => el.className = "fraction-slot invalid");
     }
-
   } else if (exerciseId === 'e4') {
-    // Ejercicio 4: 45 Tg → dag
     const slots = {
-      num1Power: getSlotContent('e4-num1-power'),
-      num1Unit: getSlotContent('e4-num1-unit'),
-      den1Power: getSlotContent('e4-den1-power'),
-      den1Unit: getSlotContent('e4-den1-unit'),
-      num2Power: getSlotContent('e4-num2-power'),
-      num2Unit: getSlotContent('e4-num2-unit'),
-      den2Power: getSlotContent('e4-den2-power'),
-      den2Unit: getSlotContent('e4-den2-unit')
+      n1p: getSlotContent('e4-num1-power'), n1u: getSlotContent('e4-num1-unit'),
+      d1p: getSlotContent('e4-den1-power'), d1u: getSlotContent('e4-den1-unit'),
+      n2p: getSlotContent('e4-num2-power'), n2u: getSlotContent('e4-num2-unit'),
+      d2p: getSlotContent('e4-den2-power'), d2u: getSlotContent('e4-den2-unit')
     };
-    
+
     feedbackEl = document.getElementById('e4-feedback');
     resultDiv = document.getElementById('e4-result');
     slotElements = [
@@ -251,33 +244,27 @@ function checkAnswer(exerciseId) {
 
     allFilled = Object.values(slots).every(s => s !== null);
     if (!allFilled) {
-      feedbackEl.innerHTML = "⚠️ Completa los 8 espacios.";
+      feedbackEl.textContent = "⚠️ Completa los 8 espacios.";
       feedbackEl.className = "feedback incorrect";
-      renderMath(feedbackEl);
       resultDiv.classList.remove('show');
-      resetSlotStyles('e4');
       return;
     }
 
-    // Solución:
-    // Tg → g: (10¹² g) / (1 Tg)
-    // g → dag: (1 dag) / (10¹ g)
-    isCorrect = 
-      slots.num1Power.value === "10¹²" && slots.num1Unit.value === "g" &&
-      slots.den1Power.value === "1" && slots.den1Unit.value === "Tg" &&
-      slots.num2Power.value === "1" && slots.num2Unit.value === "dag" &&
-      slots.den2Power.value === "10¹" && slots.den2Unit.value === "g";
+    isCorrect =
+      slots.n1p.value === "10^6" && slots.n1u.value === "m" &&
+      slots.d1p.value === "1" && slots.d1u.value === "Mm" &&
+      slots.n2p.value === "10^2" && slots.n2u.value === "cm" &&
+      slots.d2p.value === "1" && slots.d2u.value === "m";
 
     if (isCorrect) {
       feedbackEl.innerHTML = "✅ ¡Impresionante! Conversión perfecta.";
       feedbackEl.className = "feedback correct";
       mathTeX = `
         \\[
-        45\\,\\mathrm{Tg}
-        = 45\\,\\mathrm{Tg} \\times \\frac{10^{12}\\,\\mathrm{g}}{1\\,\\mathrm{Tg}}
-        \\times \\frac{1\\,\\mathrm{dag}}{10^{1}\\,\\mathrm{g}}
-        = 45 \\times \\frac{10^{12}}{10^{1}}\\,\\mathrm{dag}
-        = 4.5 \\times 10^{12}\\,\\mathrm{dag}
+        3.2\\,\\mathrm{Mm}
+        = 3.2\\,\\mathrm{Mm} \\times \\frac{10^{6}\\,\\mathrm{m}}{1\\,\\mathrm{Mm}}
+        \\times \\frac{10^{2}\\,\\mathrm{cm}}{1\\,\\mathrm{m}}
+        = 3.2 \\times 10^{8}\\,\\mathrm{cm}
         \\]
       `;
       resultDiv.innerHTML = mathTeX;
@@ -285,7 +272,7 @@ function checkAnswer(exerciseId) {
       renderMath(resultDiv);
       slotElements.forEach(el => el.className = "fraction-slot valid");
     } else {
-      errorMessage = "❌ Usa: \\(\\frac{10^{12}\\,\\mathrm{g}}{1\\,\\mathrm{Tg}}\\) y \\(\\frac{1\\,\\mathrm{dag}}{10^{1}\\,\\mathrm{g}}\\).";
+      errorMessage = "❌ Usa: \\(\\frac{10^{6}\\,\\mathrm{m}}{1\\,\\mathrm{Mm}}\\) y \\(\\frac{10^{2}\\,\\mathrm{cm}}{1\\,\\mathrm{m}}\\).";
       feedbackEl.innerHTML = errorMessage;
       feedbackEl.className = "feedback incorrect";
       renderMath(feedbackEl);
@@ -298,13 +285,13 @@ function checkAnswer(exerciseId) {
 function resetSlotStyles(exerciseId) {
   let slots = [];
   if (exerciseId === 'e1') {
-    slots = ['e1-num-power', 'e1-num-unit', 'e1-den-power', 'e1-den-unit'];
+    slots = ['e1-num1-power', 'e1-num1-unit', 'e1-den1-power', 'e1-den1-unit',
+             'e1-num2-power', 'e1-num2-unit', 'e1-den2-power', 'e1-den2-unit'];
   } else if (exerciseId === 'e2') {
     slots = ['e2-num1-power', 'e2-num1-unit', 'e2-den1-power', 'e2-den1-unit',
              'e2-num2-power', 'e2-num2-unit', 'e2-den2-power', 'e2-den2-unit'];
   } else if (exerciseId === 'e3') {
-    slots = ['e3-num1-power', 'e3-num1-unit', 'e3-den1-power', 'e3-den1-unit',
-             'e3-num2-power', 'e3-num2-unit', 'e3-den2-power', 'e3-den2-unit'];
+    slots = ['e3-num-power', 'e3-num-unit', 'e3-den-power', 'e3-den-unit'];
   } else if (exerciseId === 'e4') {
     slots = ['e4-num1-power', 'e4-num1-unit', 'e4-den1-power', 'e4-den1-unit',
              'e4-num2-power', 'e4-num2-unit', 'e4-den2-power', 'e4-den2-unit'];
@@ -322,13 +309,13 @@ function resetSlotStyles(exerciseId) {
 function resetExercise(exerciseId) {
   let slots = [];
   if (exerciseId === 'e1') {
-    slots = ['e1-num-power', 'e1-num-unit', 'e1-den-power', 'e1-den-unit'];
+    slots = ['e1-num1-power', 'e1-num1-unit', 'e1-den1-power', 'e1-den1-unit',
+             'e1-num2-power', 'e1-num2-unit', 'e1-den2-power', 'e1-den2-unit'];
   } else if (exerciseId === 'e2') {
     slots = ['e2-num1-power', 'e2-num1-unit', 'e2-den1-power', 'e2-den1-unit',
              'e2-num2-power', 'e2-num2-unit', 'e2-den2-power', 'e2-den2-unit'];
   } else if (exerciseId === 'e3') {
-    slots = ['e3-num1-power', 'e3-num1-unit', 'e3-den1-power', 'e3-den1-unit',
-             'e3-num2-power', 'e3-num2-unit', 'e3-den2-power', 'e3-den2-unit'];
+    slots = ['e3-num-power', 'e3-num-unit', 'e3-den-power', 'e3-den-unit'];
   } else if (exerciseId === 'e4') {
     slots = ['e4-num1-power', 'e4-num1-unit', 'e4-den1-power', 'e4-den1-unit',
              'e4-num2-power', 'e4-num2-unit', 'e4-den2-power', 'e4-den2-unit'];
@@ -339,7 +326,7 @@ function resetExercise(exerciseId) {
     el.innerHTML = `<span class="placeholder">${id.includes('power') ? 'Potencia' : 'Unidad'}</span>`;
     el.className = "fraction-slot";
   });
-  
+
   document.getElementById(`${exerciseId}-feedback`).innerHTML = '';
   document.getElementById(`${exerciseId}-result`).classList.remove('show');
 }
@@ -347,7 +334,6 @@ function resetExercise(exerciseId) {
 function openTab(tabName) {
   document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-
   document.getElementById(tabName).classList.add('active');
   event.target.classList.add('active');
 }
