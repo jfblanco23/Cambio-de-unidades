@@ -1,0 +1,406 @@
+/* Reset and base styles */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e3f2fd 100%);
+  min-height: 100vh;
+  padding: 20px;
+  color: #2c3e50;
+}
+
+.container {
+  max-width: 1600px; /* ✅ Ampliado para caber Ejercicio 2 en una línea */
+  margin: 0 auto;
+}
+
+header {
+  text-align: center;
+  margin-bottom: 25px;
+  padding: 20px;
+}
+
+h1 {
+  font-size: 2.2rem;
+  color: #1a237e;
+  margin-bottom: 10px;
+}
+
+.subtitle {
+  font-size: 1.2rem;
+  color: #546e7a;
+  font-style: italic;
+}
+
+.tabs {
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+  margin-bottom: 25px;
+  flex-wrap: wrap;
+}
+
+.tab-btn {
+  padding: 12px 20px;
+  font-size: 1rem;
+  font-weight: bold;
+  background: #e8eaf6;
+  border: none;
+  border-radius: 10px 10px 0 0;
+  cursor: pointer;
+  transition: all 0.3s;
+  color: #3949ab;
+}
+
+.tab-btn:hover {
+  background: #c5cae9;
+}
+
+.tab-btn.active {
+  background: #3f51b5;
+  color: white;
+  box-shadow: 0 4px 10px rgba(63, 81, 181, 0.3);
+}
+
+.tab-content {
+  display: none;
+}
+
+.tab-content.active {
+  display: block;
+  animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.exercise-card {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+  padding: 25px;
+  margin-bottom: 30px;
+}
+
+.problem {
+  font-size: 1.4rem;
+  text-align: center;
+  margin-bottom: 25px;
+  padding: 15px;
+  background: #f5f9ff;
+  border-radius: 12px;
+  font-weight: 600;
+}
+
+.conversion-display {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px; /* ✅ Reducido de 15px → 8px */
+  flex-wrap: wrap;
+  margin-bottom: 25px;
+}
+
+/* Forzar una sola línea en el Ejercicio 2 (solo en escritorio) */
+@media (min-width: 1024px) {
+  #ex2 .conversion-display {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding: 10px 0;
+  }
+}
+
+.value {
+  font-size: 1.6rem;
+  font-weight: bold;
+  color: #0288d1;
+}
+
+.arrow {
+  font-size: 1.6rem;
+  color: #3f51b5;
+}
+
+.parenthesis-fraction {
+  display: flex;
+  align-items: center;
+  position: relative;
+  height: 100%;
+}
+
+.simple-fraction {
+  display: flex;
+  align-items: center;
+}
+
+.parenthesis {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #37474f;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.parenthesis.large {
+  font-size: 3.8rem;
+  line-height: 1;
+  height: 100%;
+  margin: 0 8px;
+  color: #37474f;
+  font-family: 'Cambria Math', 'STIX Two Math', 'Latin Modern Math', 'Times New Roman', serif;
+  transform: scaleY(1.15);
+}
+
+.fraction-container {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0 10px;
+  min-height: 150px;
+  justify-content: center;
+}
+
+.fraction-row {
+  display: flex;
+  gap: 6px; /* ✅ ligeramente reducido */
+  align-items: center;
+  font-size: 1.25rem; /* ✅ ligeramente reducido */
+  font-weight: bold;
+  padding: 6px 0;
+}
+
+.fraction-line {
+  width: 100px; /* ✅ de 120px → 100px */
+  height: 2px;
+  background: #455a64;
+  margin: 10px 0; /* ✅ menos margen */
+  border-radius: 1px;
+}
+
+.fraction-slot {
+  width: 55px;        /* ✅ de 60px → 55px */
+  height: 50px;       /* ✅ de 55px → 50px */
+  border: 2px dashed #90a4ae;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem; /* ✅ más compacto */
+  font-weight: bold;  /* ✅ mejora legibilidad */
+  background: #fafbfc;
+  margin: 4px;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.fraction-slot.valid {
+  border-color: #2e7d32;
+  background-color: #e8f5e9;
+  box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.2);
+}
+
+.fraction-slot.invalid {
+  border-color: #c62828;
+  background-color: #ffebee;
+  box-shadow: 0 0 0 3px rgba(198, 40, 40, 0.2);
+}
+
+.fraction-slot.dragover-unit {
+  background-color: #f3e5f5;
+  border-color: #7b1fa2;
+  box-shadow: inset 0 0 0 2px rgba(123, 31, 162, 0.4);
+}
+
+.fraction-slot.dragover-power {
+  background-color: #fff8e1;
+  border-color: #f57f17;
+  box-shadow: inset 0 0 0 2px rgba(245, 127, 23, 0.4);
+}
+
+.placeholder {
+  color: #78909c;
+  font-style: italic;
+  font-size: 0.75rem;
+}
+
+.draggable {
+  display: inline-block;
+  padding: 12px 20px;
+  margin: 8px;
+  background: white;
+  border: 2px solid #3f51b5;
+  border-radius: 12px;
+  cursor: grab;
+  font-weight: bold;
+  font-size: 1.05rem;
+  transition: all 0.2s;
+  user-select: none;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.08);
+}
+
+.draggable:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.12);
+}
+
+.draggable:active {
+  cursor: grabbing;
+}
+
+.units-section, .powers-section {
+  margin-top: 25px;
+}
+
+.section-title {
+  font-size: 1.3rem;
+  color: #1a237e;
+  margin: 20px 0 15px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #3f51b5;
+}
+
+.cards-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+/* Units */
+.draggable-unit.unit-g { border-color: #2e7d32; background-color: #e8f5e9; color: #2e7d32; }
+.draggable-unit.unit-kg { border-color: #c62828; background-color: #ffebee; color: #c62828; }
+.draggable-unit.unit-mg { border-color: #f57f17; background-color: #fff8e1; color: #f57f17; }
+.draggable-unit.unit-dg { border-color: #5d4037; background-color: #efebe9; color: #5d4037; }
+.draggable-unit.unit-mm { border-color: #00796b; background-color: #e0f2f1; color: #00796b; }
+.draggable-unit.unit-cm { border-color: #00796b; background-color: #e0f2f1; color: #00796b; }
+.draggable-unit.unit-dm { border-color: #00796b; background-color: #e0f2f1; color: #00796b; }
+.draggable-unit.unit-m { border-color: #2e7d32; background-color: #e8f5e9; color: #2e7d32; }
+.draggable-unit.unit-m3 { border-color: #2e7d32; background-color: #e8f5e9; color: #2e7d32; }
+.draggable-unit.unit-L { border-color: #3f51b5; background-color: #e8eaf6; color: #3f51b5; }
+.draggable-unit.unit-mL { border-color: #7e57c2; background-color: #f3e5f5; color: #7e57c2; }
+.draggable-unit.unit-cL { border-color: #f57f17; background-color: #fff8e1; color: #f57f17; }
+
+.draggable-power {
+  border-color: #f57f17;
+  background-color: #fffde7;
+  color: #ef6c00;
+}
+
+.dropped { cursor: default; }
+
+.fraction-slot.color-g { border-color: #2e7d32; background-color: #e8f5e9; color: #2e7d32; }
+.fraction-slot.color-kg { border-color: #c62828; background-color: #ffebee; color: #c62828; }
+.fraction-slot.color-mg { border-color: #f57f17; background-color: #fff8e1; color: #f57f17; }
+.fraction-slot.color-dg { border-color: #5d4037; background-color: #efebe9; color: #5d4037; }
+.fraction-slot.color-mm { border-color: #00796b; background-color: #e0f2f1; color: #00796b; }
+.fraction-slot.color-cm { border-color: #00796b; background-color: #e0f2f1; color: #00796b; }
+.fraction-slot.color-dm { border-color: #00796b; background-color: #e0f2f1; color: #00796b; }
+.fraction-slot.color-m { border-color: #2e7d32; background-color: #e8f5e9; color: #2e7d32; }
+.fraction-slot.color-m3 { border-color: #2e7d32; background-color: #e8f5e9; color: #2e7d32; }
+.fraction-slot.color-L { border-color: #3f51b5; background-color: #e8eaf6; color: #3f51b5; }
+.fraction-slot.color-mL { border-color: #7e57c2; background-color: #f3e5f5; color: #7e57c2; }
+.fraction-slot.color-cL { border-color: #f57f17; background-color: #fff8e1; color: #f57f17; }
+
+.feedback {
+  text-align: center;
+  font-size: 1.25rem;
+  font-weight: bold;
+  min-height: 40px;
+  margin: 25px 0;
+  padding: 15px;
+  border-radius: 12px;
+}
+
+.feedback.correct {
+  background: #e8f5e9;
+  color: #2e7d32;
+  border: 2px solid #4caf50;
+}
+
+.feedback.incorrect {
+  background: #ffebee;
+  color: #c62828;
+  border: 2px solid #e53935;
+}
+
+.result-container {
+  margin-top: 25px;
+  padding: 20px;
+  background: #e8eaf6;
+  border-radius: 12px;
+  text-align: center;
+  font-size: 1.2rem;
+  font-weight: 600;
+  display: none;
+}
+
+.result-container.show {
+  display: block;
+  animation: fadeIn 0.6s ease;
+}
+
+.controls {
+  text-align: center;
+  margin-top: 20px;
+}
+
+button {
+  background: #3f51b5;
+  color: white;
+  border: none;
+  padding: 14px 32px;
+  font-size: 1.1rem;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.3s;
+  box-shadow: 0 4px 10px rgba(63, 81, 181, 0.3);
+  margin: 0 10px;
+}
+
+button:hover {
+  background: #303f9f;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(63, 81, 181, 0.4);
+}
+
+button:active {
+  transform: translateY(0);
+}
+
+.reset-btn {
+  background: #78909c;
+}
+
+.reset-btn:hover {
+  background: #546e7a;
+}
+
+.cubed {
+  font-size: 1.4rem;
+  vertical-align: super;
+  margin-left: 6px;
+  font-weight: bold;
+  color: #37474f;
+  position: absolute;
+  right: -20px;
+  top: -15px;
+  pointer-events: none;
+}
+
+@media (max-width: 768px) {
+  .container { max-width: 100%; }
+  .conversion-display {
+    flex-direction: column;
+    gap: 10px;
+  }
+  .fraction-line { width: 90px; }
+  .fraction-slot { width: 50px; height: 45px; font-size: 0.75rem; }
+  .parenthesis.large { font-size: 2.8rem; }
+}
